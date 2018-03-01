@@ -31,10 +31,11 @@ public class Main {
                 current.add(pq.poll());
 
             List<List<Ride>> decisions = new ArrayList<>(current.size());
+            HashMap<Integer, List<Ride>> d = new HashMap<>();
 
             for (int i = 0; i < current.size(); i++) {
                 final int j = i;
-                decisions.set(j, new ArrayList<>(io.rides));
+                decisions.add(new ArrayList<>(io.rides));
                 Collections.sort(decisions.get(i), new Comparator<Ride>() {
                     @Override
                     public int compare (Ride firstRide, Ride secondRide) {
@@ -60,14 +61,23 @@ public class Main {
             List<Ride> bestPerCar = new ArrayList<>(current.size());
 
             for (int i = 0 ; i < decisions.size(); i++) {
+                boolean flag = false;
                 for (int j = 0; j < decisions.get(i).size(); j++) {
                     Ride ride = decisions.get(i).get(j);
                     if (canComplete(current.get(i), ride)) {
-                        bestPerCar.set(i, ride);
+                        bestPerCar.add(ride);
+                        flag = true;
                         break;
                     }
                 }
+                if(!flag) {
+                    current.remove(i);
+                    decisions.remove(i);
+                    i--;
+                }
             }
+
+
 
             while (current.size() > 0) {
                 long bestIdle = Integer.MAX_VALUE;
@@ -93,6 +103,7 @@ public class Main {
                     decisions.get(i).remove(bestRide);
                 decisions.remove(carIndex);
                 current.remove(carIndex);
+                bestPerCar.remove(carIndex);
             }
         }
 
