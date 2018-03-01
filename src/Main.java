@@ -50,6 +50,7 @@ public class Main {
                 if (canComplete(car, ride)) {
                     car.scheduleRide(ride);
                     pq.add(car);
+                    break;
                 }
             }
         }
