@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,25 +13,43 @@ public class IO {
     int steps = 0;
     List<Ride> rides = new ArrayList<>();
 
-    public  void readInput(File file) throws FileNotFoundException {
+    public void readInput(File file) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String[] tokens = br.readLine().split("\\s+");
+            this.rows = cint(tokens[0]);
+            this.columns = cint(tokens[1]);
+            this.vehicles = cint(tokens[2]);
+            this.nbRides = cint(tokens[3]);
+            this.bonus = cint(tokens[4]);
+            this.steps = cint(tokens[5]);
 
-        Scanner scanner =new Scanner(new FileReader(file));
-        this.rows = scanner.nextInt();
-        this.columns = scanner.nextInt();
-        this.vehicles = scanner.nextInt();
-        this.nbRides = scanner.nextInt();
-        this.bonus = scanner.nextInt();
-        this.steps = scanner.nextInt();
-
-        for(int i =0 ; i<nbRides;i++){
-            Coordinate start = new Coordinate(scanner.nextInt(), scanner.nextInt());
-            Coordinate finish  = new Coordinate(scanner.nextInt(),scanner.nextInt());
-            rides.add(new Ride(start,finish,scanner.nextInt(),scanner.nextInt()));
+            for (int i = 0; i < nbRides; i++) {
+                tokens = br.readLine().split("\\s+");
+                Coordinate start = new Coordinate(cint(tokens[0]), cint(tokens[1]));
+                Coordinate finish = new Coordinate(cint(tokens[2]), cint(tokens[3]));
+                rides.add(new Ride(start, finish, cint(tokens[4]), cint(tokens[5])));
+            }
+            System.out.println("Read input");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println("Read input");
     }
 
-    public static void outPut(Object toOutput){
+    public static void output(File file, Object toOutput){
+        try {
+            FileWriter fw = new FileWriter(file);
+            // code
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static int cint(String s) {
+        return Integer.parseInt(s);
+    }
+
+    public static long clong(String s) {
+        return Long.parseLong(s);
     }
 }
