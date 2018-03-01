@@ -28,7 +28,7 @@ public class IO {
                 tokens = br.readLine().split("\\s+");
                 Coordinate start = new Coordinate(cint(tokens[0]), cint(tokens[1]));
                 Coordinate finish = new Coordinate(cint(tokens[2]), cint(tokens[3]));
-                rides.add(new Ride(start, finish, cint(tokens[4]), cint(tokens[5])));
+                rides.add(new Ride(start, finish, cint(tokens[4]), cint(tokens[5]),i));
             }
             System.out.println("Read input");
         } catch (Exception e) {
@@ -36,10 +36,19 @@ public class IO {
         }
     }
 
-    public static void output(File file, Object toOutput){
+    public static void output(File file, List<Car> cars){
         try {
             FileWriter fw = new FileWriter(file);
             // code
+            for(int i =0;i<cars.size();i++){
+                fw.write(String.format("%d",cars.get(i).finishedRides.size()));
+                for(Ride r:cars.get(i).finishedRides){
+                    fw.write(String.format(" %d",r.index));
+                }
+                fw.write("\n");
+            }
+            fw.flush();
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
