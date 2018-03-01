@@ -5,6 +5,7 @@ import java.util.*;
 public class Main {
     public static PriorityQueue<Car> pq = new PriorityQueue<>(Comparator.comparingLong(car -> car.timeFree));
     public static IO io = new IO();
+    private static final double timeThreshold = 35000;
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -24,9 +25,25 @@ public class Main {
             cars.add(car);
         }
 
-        while (!pq.isEmpty() && pq.peek().timeFree < io.steps && !io.rides.isEmpty()) {
+        while (!pq.isEmpty() && pq.peek().timeFree < io.steps) {
             Car car = pq.poll();
-            List<Ride> r = new ArrayList<>(io.rides);
+            List<Ride> r;
+            boolean longRide = false;
+            if (car.timeFree < timeThreshold) {
+                r = new ArrayList<>(io.rides);
+                if (r.isEmpty()) {
+                    longRide = true;
+                    r = new ArrayList<>(io.longRides);
+                }
+            } else {
+                longRide = true;
+                r = new ArrayList<>(io.longRides);
+            }
+
+            if(r.isEmpty()){
+                break;
+            }
+
             Collections.sort(r, (firstRide, secondRide) -> {
                 int fDist = car.loc.distanceTo(firstRide.from);
                 int sDist = car.loc.distanceTo(secondRide.from);
@@ -48,6 +65,11 @@ public class Main {
             for (int i = 0; i < r.size(); i++) {
                 Ride ride = r.get(i);
                 if (canComplete(car, ride)) {
+                    if(longRide){
+                        io.longRides.remove(r);
+                    }else{
+                        io.rides.remove(r);
+                    }
                     car.scheduleRide(ride);
                     break;
                 }
