@@ -49,7 +49,6 @@ public class Main {
                 Ride ride = r.get(i);
                 if (canComplete(car, ride)) {
                     car.scheduleRide(ride);
-                    pq.add(car);
                     break;
                 }
             }
