@@ -5,13 +5,13 @@ import java.util.Scanner;
 
 public class IO {
 
-    int rows = 0;
-    int columns = 0;
-    int vehicles = 0;
-    int nbRides = 0;
-    int bonus = 0;
-    int steps = 0;
-    List<Ride> rides = new ArrayList<>();
+    public int rows = 0;
+    public int columns = 0;
+    public int vehicles = 0;
+    public int nbRides = 0;
+    public int bonus = 0;
+    public int steps = 0;
+    public List<Ride> rides = new ArrayList<>();
 
     public void readInput(File file) {
         try {
