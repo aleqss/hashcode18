@@ -42,18 +42,18 @@ public class Main {
                         int fDist = current.get(j).loc.distanceTo(firstRide.from);
                         int sDist = current.get(j).loc.distanceTo(secondRide.from);
 
-                        long idleA = Math.max(fDist, firstRide.earliestStart - current.get(j).timeFree);
-                        long idleB = Math.max(sDist, secondRide.earliestStart - current.get(j).timeFree);
+                        double idleA = Math.max(fDist, firstRide.earliestStart - current.get(j).timeFree);
+                        double idleB = Math.max(sDist, secondRide.earliestStart - current.get(j).timeFree);
 
                         if (current.get(j).timeFree + idleA == firstRide.earliestStart) {
-                            idleA -= io.bonus;
+                            idleA -= (double) (io.bonus) / fDist;
                         }
 
                         if (current.get(j).timeFree + idleB == secondRide.earliestStart) {
-                            idleB -= io.bonus;
+                            idleB -= (double) (io.bonus) / sDist;
                         }
 
-                        return Long.compare(idleA, idleB);
+                        return Double.compare(idleA, idleB);
                     }
                 });
             }
