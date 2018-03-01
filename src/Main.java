@@ -1,18 +1,19 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Main {
     public static PriorityQueue<Car> pq = new PriorityQueue<>(Comparator.comparingLong(car -> car.timeFree));
     public static IO io = new IO();
-    private static final double timeThreshold = 35000;
+    private static double timeThreshold;
 
     public static void main(String[] args) {
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             System.out.println("You didnt specify a file");
             return;
         }
+
+        timeThreshold = IO.cint(args[2]);
 
         File file = new File(args[0]);
         io.readInput(file);
@@ -30,7 +31,7 @@ public class Main {
             List<Ride> r;
             boolean longRide = false;
             if (car.timeFree < timeThreshold) {
-                r = new ArrayList<>(io.rides);
+                r = new ArrayList<>(io.shortRides);
                 if (r.isEmpty()) {
                     longRide = true;
                     r = new ArrayList<>(io.longRides);
@@ -68,7 +69,7 @@ public class Main {
                     if(longRide){
                         io.longRides.remove(ride);
                     }else{
-                        io.rides.remove(ride);
+                        io.shortRides.remove(ride);
                     }
                     car.scheduleRide(ride);
                     break;

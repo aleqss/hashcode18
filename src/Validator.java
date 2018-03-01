@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Validator {
     public static IO io = new IO();
@@ -26,6 +27,8 @@ public class Validator {
 
         HashSet<Ride> completed = new HashSet<>();
 
+        List<Ride> rides = new ArrayList<>(io.rides);
+
         long scoreSum = 0;
         for (int i = 0; i < io.vehicles; i++) {
             String[] tokens = br.readLine().split("\\s+");
@@ -35,7 +38,7 @@ public class Validator {
 
             for (int j = 1; j <= M; j++) {
                 int rideNr = IO.cint(tokens[j]);
-                Ride r = io.rides.get(rideNr);
+                Ride r = rides.get(rideNr);
 
                 if (completed.contains(r)) {
                     throw new IllegalStateException(String.format("Ride %d was already completed!\n", rideNr));

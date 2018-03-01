@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class IO {
 
@@ -12,6 +11,7 @@ public class IO {
     public int bonus = 0;
     public int steps = 0;
     public List<Ride> rides = new ArrayList<>();
+    public List<Ride> shortRides = new ArrayList<>();
     public List<Ride> longRides = new ArrayList<>();
 
     public void readInput(File file) {
@@ -33,8 +33,9 @@ public class IO {
                 if(ride.from.distanceTo(ride.to)>columns*0.33){
                     longRides.add(ride);
                 }else {
-                    rides.add(ride);
+                    shortRides.add(ride);
                 }
+                rides.add(ride);
             }
 
 
