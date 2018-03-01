@@ -33,21 +33,22 @@ public class Main {
             List<List<Ride>> decisions = new ArrayList<>(current.size());
 
             for (int i = 0; i < current.size(); i++) {
-                decisions.set(i, new ArrayList<>(io.rides));
+                final int j = i;
+                decisions.set(j, new ArrayList<>(io.rides));
                 Collections.sort(decisions.get(i), new Comparator<Ride>() {
                     @Override
                     public int compare (Ride firstRide, Ride secondRide) {
-                        int fDist = current.get(i).loc.distanceTo(firstRide.from);
-                        int sDist = current.get(i).loc.distanceTo(secondRide.from);
+                        int fDist = current.get(j).loc.distanceTo(firstRide.from);
+                        int sDist = current.get(j).loc.distanceTo(secondRide.from);
 
-                        long idleA = Math.max(fDist, firstRide.earliestStart - current.get(i).timeFree);
-                        long idleB = Math.max(sDist, secondRide.earliestStart - current.get(i).timeFree);
+                        long idleA = Math.max(fDist, firstRide.earliestStart - current.get(j).timeFree);
+                        long idleB = Math.max(sDist, secondRide.earliestStart - current.get(j).timeFree);
 
-                        if (current.get(i).timeFree + idleA == firstRide.earliestStart) {
+                        if (current.get(j).timeFree + idleA == firstRide.earliestStart) {
                             idleA -= io.bonus;
                         }
 
-                        if (current.get(i).timeFree + idleB == secondRide.earliestStart) {
+                        if (current.get(j).timeFree + idleB == secondRide.earliestStart) {
                             idleB -= io.bonus;
                         }
 
