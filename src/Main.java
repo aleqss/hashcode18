@@ -31,7 +31,7 @@ public class Main {
                 current.add(pq.poll());
 
             List<List<Ride>> decisions = new ArrayList<>(current.size());
-            HashMap<Integer, List<Ride>> d = new HashMap<>();
+            // HashMap<Integer, List<Ride>> d = new HashMap<>();
 
             for (int i = 0; i < current.size(); i++) {
                 final int j = i;
@@ -58,28 +58,28 @@ public class Main {
                 });
             }
 
-            List<Ride> bestPerCar = new ArrayList<>(current.size());
-
-            for (int i = 0 ; i < decisions.size(); i++) {
-                boolean flag = false;
-                for (int j = 0; j < decisions.get(i).size(); j++) {
-                    Ride ride = decisions.get(i).get(j);
-                    if (canComplete(current.get(i), ride)) {
-                        bestPerCar.add(ride);
-                        flag = true;
-                        break;
+            while (current.size() > 0) {
+                List<Ride> bestPerCar = new ArrayList<>(current.size());
+                for (int i = 0 ; i < decisions.size(); i++) {
+                    boolean flag = false;
+                    for (int j = 0; j < decisions.get(i).size(); j++) {
+                        Ride ride = decisions.get(i).get(j);
+                        if (canComplete(current.get(i), ride)) {
+                            bestPerCar.add(ride);
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        current.remove(i);
+                        decisions.remove(i);
+                        i--;
                     }
                 }
-                if(!flag) {
-                    current.remove(i);
-                    decisions.remove(i);
-                    i--;
-                }
-            }
 
+                if (current.size() == 0)
+                    break;
 
-
-            while (current.size() > 0) {
                 long bestIdle = Integer.MAX_VALUE;
                 Ride bestRide = null;
                 int carIndex = 0;
@@ -100,7 +100,12 @@ public class Main {
 
                 current.get(carIndex).scheduleRide(bestRide);
                 for (int i = 0; i < decisions.size(); i++)
-                    decisions.get(i).remove(bestRide);
+                    for (int j = 0; j < decisions.get(i).size(); j++)
+                        if (decisions.get(i).get(j).index == bestRide.index) {
+                            decisions.get(i).remove(j);
+                            break;
+                        }
+                    // decisions.get(i).remove(bestRide);
                 decisions.remove(carIndex);
                 current.remove(carIndex);
                 bestPerCar.remove(carIndex);
