@@ -24,7 +24,8 @@ public class Main {
             cars.add(car);
         }
 
-        while (pq.peek().timeFree < io.steps && !io.rides.isEmpty()) {
+
+        while (!pq.isEmpty() && pq.peek().timeFree < io.steps && !io.rides.isEmpty()) {
             Car car = pq.poll();
             List<Ride> r = new ArrayList<>(io.rides);
             Collections.sort(r, (firstRide, secondRide) -> {

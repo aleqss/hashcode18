@@ -12,6 +12,7 @@ public class IO {
     public int bonus = 0;
     public int steps = 0;
     public List<Ride> rides = new ArrayList<>();
+    public List<Ride> longRides = new ArrayList<>();
 
     public void readInput(File file) {
         try {
@@ -28,8 +29,15 @@ public class IO {
                 tokens = br.readLine().split("\\s+");
                 Coordinate start = new Coordinate(cint(tokens[0]), cint(tokens[1]));
                 Coordinate finish = new Coordinate(cint(tokens[2]), cint(tokens[3]));
-                rides.add(new Ride(start, finish, cint(tokens[4]), cint(tokens[5]),i));
+                Ride ride = new Ride(start, finish, cint(tokens[4]), cint(tokens[5]),i);
+                if(ride.from.distanceTo(ride.to)>columns*0.33){
+                    longRides.add(ride);
+                }else {
+                    rides.add(ride);
+                }
             }
+
+
             System.out.println("Read input");
         } catch (Exception e) {
             e.printStackTrace();
