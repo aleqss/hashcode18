@@ -8,7 +8,6 @@ public class Car {
 
 
     void scheduleRide(Ride r) {
-        Main.io.rides.remove(r);
         finishedRides.add(r);
 
         timeFree += loc.distanceTo(r.from);
