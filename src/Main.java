@@ -24,33 +24,74 @@ public class Main {
             cars.add(car);
         }
 
-        while (pq.peek().timeFree < io.steps && !io.rides.isEmpty()) {
-            Car car = pq.poll();
-            List<Ride> r = new ArrayList<>(io.rides);
-            Collections.sort(r, (firstRide, secondRide) -> {
-                int fDist = car.loc.distanceTo(firstRide.from);
-                int sDist = car.loc.distanceTo(secondRide.from);
+        while (!pq.isEmpty() && pq.peek().timeFree < io.steps && !io.rides.isEmpty()) {
+            List<Car> current = new ArrayList<>();
+            current.add(pq.poll());
+            while (!pq.isEmpty() && pq.peek().timeFree == current.get(0).timeFree)
+                current.add(pq.poll());
 
-                long idleA = Math.max(fDist, firstRide.earliestStart - car.timeFree);
-                long idleB = Math.max(sDist, secondRide.earliestStart - car.timeFree);
+            List<List<Ride>> decisions = new ArrayList<>(current.size());
 
-                if (car.timeFree + idleA == firstRide.earliestStart) {
-                    idleA -= io.bonus;
+            for (int i = 0; i < current.size(); i++) {
+                decisions.set(i, new ArrayList<>(io.rides));
+                Collections.sort(decisions.get(i), new Comparator<Ride>() {
+                    @Override
+                    public int compare (Ride firstRide, Ride secondRide) {
+                        int fDist = current.get(i).loc.distanceTo(firstRide.from);
+                        int sDist = current.get(i).loc.distanceTo(secondRide.from);
+
+                        long idleA = Math.max(fDist, firstRide.earliestStart - current.get(i).timeFree);
+                        long idleB = Math.max(sDist, secondRide.earliestStart - current.get(i).timeFree);
+
+                        if (current.get(i).timeFree + idleA == firstRide.earliestStart) {
+                            idleA -= io.bonus;
+                        }
+
+                        if (current.get(i).timeFree + idleB == secondRide.earliestStart) {
+                            idleB -= io.bonus;
+                        }
+
+                        return Long.compare(idleA, idleB);
+                    }
+                });
+            }
+
+            List<Ride> bestPerCar = new ArrayList<>(current.size());
+
+            for (int i = 0 ; i < decisions.size(); i++) {
+                for (int j = 0; j < decisions.get(i).size(); j++) {
+                    Ride ride = decisions.get(i).get(j);
+                    if (canComplete(current.get(i), ride)) {
+                        bestPerCar.set(i, ride);
+                        break;
+                    }
+                }
+            }
+
+            while (current.size() > 0) {
+                long bestIdle = Integer.MAX_VALUE;
+                Ride bestRide = null;
+                int carIndex = 0;
+
+                for (int i = 0; i < bestPerCar.size(); i++) {
+                    Ride ride = bestPerCar.get(i);
+                    long idle = Math.max(current.get(i).loc.distanceTo(bestPerCar.get(i).from),
+                        ride.earliestStart - current.get(i).timeFree);
+                    if (idle + current.get(i).timeFree == ride.earliestStart)
+                        idle -= io.bonus;
+
+                    if (idle < bestIdle) {
+                        bestIdle = idle;
+                        bestRide = ride;
+                        carIndex = i;
+                    }
                 }
 
-                if (car.timeFree + idleB == secondRide.earliestStart) {
-                    idleB -= io.bonus;
-                }
-
-                return Long.compare(idleA, idleB);
-            });
-
-            for (int i = 0; i < r.size(); i++) {
-                Ride ride = r.get(i);
-                if (canComplete(car, ride)) {
-                    car.scheduleRide(ride);
-                    break;
-                }
+                current.get(carIndex).scheduleRide(bestRide);
+                for (int i = 0; i < decisions.size(); i++)
+                    decisions.get(i).remove(bestRide);
+                decisions.remove(carIndex);
+                current.remove(carIndex);
             }
         }
 
