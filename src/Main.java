@@ -31,7 +31,6 @@ public class Main {
                 current.add(pq.poll());
 
             List<List<Ride>> decisions = new ArrayList<>(current.size());
-            // HashMap<Integer, List<Ride>> d = new HashMap<>();
 
             for (int i = 0; i < current.size(); i++) {
                 final int j = i;
@@ -42,15 +41,15 @@ public class Main {
                         int fDist = current.get(j).loc.distanceTo(firstRide.from);
                         int sDist = current.get(j).loc.distanceTo(secondRide.from);
 
-                        double idleA = Math.max(fDist, firstRide.earliestStart - current.get(j).timeFree);
-                        double idleB = Math.max(sDist, secondRide.earliestStart - current.get(j).timeFree);
+                        long idleA = Math.max(fDist, firstRide.earliestStart - current.get(j).timeFree);
+                        long idleB = Math.max(sDist, secondRide.earliestStart - current.get(j).timeFree);
 
                         if (current.get(j).timeFree + idleA == firstRide.earliestStart) {
-                            idleA -= (double) (io.bonus) / fDist;
+                            idleA -= io.bonus;
                         }
 
                         if (current.get(j).timeFree + idleB == secondRide.earliestStart) {
-                            idleB -= (double) (io.bonus) / sDist;
+                            idleB -= io.bonus;
                         }
 
                         return Double.compare(idleA, idleB);
