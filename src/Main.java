@@ -7,7 +7,7 @@ public class Main {
     public static IO io = new IO();
     private static final double timeThreshold = 35000;
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
 
         if (args.length < 2) {
             System.out.println("You didnt specify a file");
@@ -66,9 +66,9 @@ public class Main {
                 Ride ride = r.get(i);
                 if (canComplete(car, ride)) {
                     if(longRide){
-                        io.longRides.remove(r);
+                        io.longRides.remove(ride);
                     }else{
-                        io.rides.remove(r);
+                        io.rides.remove(ride);
                     }
                     car.scheduleRide(ride);
                     break;
